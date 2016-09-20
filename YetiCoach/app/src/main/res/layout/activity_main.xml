@@ -20,7 +20,7 @@
         android:id="@+id/txtAccountSignIn"
         android:gravity="center"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="22sp"
+        android:textSize="30sp"
         android:layout_alignParentTop="true" />
 
     <Button
