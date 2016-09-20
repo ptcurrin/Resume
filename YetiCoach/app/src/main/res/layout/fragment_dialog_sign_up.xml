@@ -9,6 +9,18 @@
     >
 
     <EditText
+        android:id="@+id/etSignUpEmail"
+        android:layout_width="match_parent"
+        android:layout_weight="15"
+        android:layout_height="0dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:background="#d1fffa"
+        android:textSize="30sp"
+        android:layout_margin="15dp"/>
+
+    <EditText
         android:id="@+id/etSignInFirstName"
         android:layout_width="match_parent"
         android:layout_weight="15"
@@ -17,7 +29,7 @@
         android:textColor="@color/colorPrimaryDark"
         android:background="#d1fffa"
         android:textSize="30sp"
-        android:layout_margin="25dp"/>
+        android:layout_margin="15dp"/>
 
     <EditText
         android:id="@+id/etSignInLastName"
@@ -28,19 +40,32 @@
         android:textColor="@color/colorPrimaryDark"
         android:background="#d1fffa"
         android:textSize="30sp"
-        android:layout_margin="25dp"
+        android:layout_margin="15dp"
         />
 
     <EditText
-        android:id="@+id/etSignInPassword"
+        android:id="@+id/etSignInPhone"
         android:layout_width="match_parent"
         android:layout_weight="15"
         android:layout_height="0dp"
-        android:hint="Password"
+        android:hint="(123)456-7890"
+        android:inputType="phone"
+        android:ems="10"
         android:textColor="@color/colorPrimaryDark"
         android:background="#d1fffa"
         android:textSize="30sp"
-        android:layout_margin="25dp"
+        android:layout_margin="15dp"/>
+
+    <EditText
+        android:id="@+id/passwordSignUp"
+        android:layout_width="match_parent"
+        android:layout_weight="15"
+        android:layout_height="0dp"
+        android:hint="@string/password"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="#d1fffa"
+        android:textSize="30sp"
+        android:layout_margin="15dp"
         />
 
     <TextView
@@ -53,6 +78,7 @@
         android:textSize="20sp"
         android:gravity="top|center_horizontal"
         android:layout_marginTop="3dp" />
+
 
     <Button
         android:id="@+id/btnSignUpConfirm"
