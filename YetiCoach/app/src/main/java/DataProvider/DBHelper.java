@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "little_yeti.db";
 
     // UserLogins Table Definition
@@ -15,6 +15,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public final static String USER_LOGINS_CN_EMAIL = "email";
     public final static String USER_LOGINS_CN_PASSWORD = "password";
 
+    // Users Table Definition
     public final static String USERS_TN = "users";
     public final static String USERS_COL_ID = "_id";
     public final static String USERS_COL_USER_ID = "userId";
@@ -85,11 +86,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     //DATES WILL BE INTEGERS USING UNIX TIME IN SECONDS SINCE JAN 1st 1970 00:00:00...
-    private static final java.lang.String SQL_CREATE_ENTRIES = "" +
+    private static final String SQL_CREATE_USER_LOGINS_TABLE = "" +
+
             "CREATE TABLE " + USER_LOGINS_TN + " (" +
             USER_LOGINS_CN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             USER_LOGINS_CN_EMAIL + " TEXT," +
-            USER_LOGINS_CN_PASSWORD + " TEXT);" +
+            USER_LOGINS_CN_PASSWORD + " TEXT);" ;
+
+    private static final String SQL_CREATE_USERS_TABLE = "" +
 
             "CREATE TABLE " + USERS_TN + " (" +
             USERS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -101,13 +105,17 @@ public class DBHelper extends SQLiteOpenHelper {
             USERS_COL_STREET + " TEXT, " +
             USERS_COL_CITY + " TEXT, " +
             USERS_COL_STATE + " TEXT, " +
-            USERS_COL_ZIP + " TEXT);" +
+            USERS_COL_ZIP + " TEXT);" ;
 
+    private static final String SQL_CREATE_ENROLLMENTS_TABLE = "" +
             "CREATE TABLE " + ENROLLMENTS_TN + " (" +
             ENROLLMENTS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ENROLLMENTS_COL_TRANS_ID + " TEXT, " +
             ENROLLMENTS_COL_PARENT_ID + " TEXT, " +
-            ENROLLMENTS_COL_TEAM_ID + " TEXT);" +
+            ENROLLMENTS_COL_TEAM_ID + " TEXT);" ;
+
+
+    private static final String SQL_CREATE_LEAGUES_TABLE = "" +
 
             "CREATE TABLE " + LEAGUES_TN + "(" +
             LEAGUES_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -118,34 +126,44 @@ public class DBHelper extends SQLiteOpenHelper {
             LEAGUES_COL_MIN_AGE + " INTEGER, " +
             LEAGUES_COL_MAX_AGE + " INTEGER, " +
             LEAGUES_COL_START_DATE + " INTEGER, " +
-            LEAGUES_COL_END_DATE + " INTEGER);" +
+            LEAGUES_COL_END_DATE + " INTEGER);" ;
+
+    private static final String SQL_CREATE_PARENTS_TABLE = "" +
 
             "CREATE TABLE " + PARENTS_TN + " (" +
             PARENTS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PARENTS_COL_PARENT_ID + " TEXT, " +
             PARENTS_COL_PLAYER_ID + " TEXT, " +
-            PARENTS_COL_USER_ID + " TEXT);" +
+            PARENTS_COL_USER_ID + " TEXT);" ;
+
+    private static final String SQL_CREATE_PLAYERS_TABLE = "" +
 
             "CREATE TABLE " + PLAYERS_TN + " (" +
             PLAYERS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PLAYERS_COL_PLAYER_ID + " TEXT, " +
             PLAYERS_COL_FIRST_NAME + " TEXT, " +
             PLAYERS_COL_LAST_NAME + " TEXT, " +
-            PLAYERS_COL_DATE_OF_BIRTH + " INTEGER);" +
+            PLAYERS_COL_DATE_OF_BIRTH + " INTEGER);" ;
+
+    private static final String SQL_CREATE_SPORTS_TABLE = "" +
 
             "CREATE TABLE " + SPORTS_TN + " (" +
             SPORTS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             SPORTS_COL_SPORT_ID + " TEXT, " +
             SPORTS_COL_NAME + " TEXT, " +
             SPORTS_COL_DESCRIPTION + " TEXT, " +
-            SPORTS_COL_IMG_PTH + " TEXT);" +
+            SPORTS_COL_IMG_PTH + " TEXT);" ;
+
+    private static final String SQL_CREATE_TEAMS_TABLE = "" +
 
             "CREATE TABLE " + TEAMS_TN + "(" +
             TEAMS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             TEAMS_COL_TEAM_ID + " TEXT, " +
             TEAMS_COL_NAME + " TEXT, " +
             TEAMS_COL_USER_ID + " TEXT, " +
-            TEAMS_COL_LEAGUE_ID + " TEXT);" +
+            TEAMS_COL_LEAGUE_ID + " TEXT);" ;
+
+    private static final String SQL_CREATE_TRANSACTIONS_TABLE = "" +
 
             "CREATE TABLE " + TRANSACTIONS_TN + " (" +
             TRANSACTIONS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -153,16 +171,16 @@ public class DBHelper extends SQLiteOpenHelper {
             TRANSACTIONS_COL_PURPOSE + " TEXT, " +
             TRANSACTIONS_COL_AMOUNT + " REAL);";
 
-    private static final java.lang.String SQL_DELETE_ENTRIES = "" +
-            "DROP TABLE " + USER_LOGINS_TN + ";" +
-            "DROP TABLE " + USERS_TN + ";" +
-            "DROP TABLE " + ENROLLMENTS_TN + ";" +
-            "DROP TABLE " + LEAGUES_TN + ";" +
-            "DROP TABLE " + PARENTS_TN + ";" +
-            "DROP TABLE " + PLAYERS_TN + ";" +
-            "DROP TABLE " + SPORTS_TN + ";" +
-            "DROP TABLE " + TEAMS_TN + ";" +
-            "DROP TABLE " + TRANSACTIONS_TN + ";";
+    private static final String[] SQL_DELETE_ENTRIES = {
+            "DROP TABLE IF EXISTS " + USER_LOGINS_TN + ";",
+            "DROP TABLE IF EXISTS  " + USERS_TN + ";" ,
+            "DROP TABLE IF EXISTS  " + ENROLLMENTS_TN + ";" ,
+            "DROP TABLE IF EXISTS  " + LEAGUES_TN + ";" ,
+            "DROP TABLE IF EXISTS  " + PARENTS_TN + ";" ,
+            "DROP TABLE IF EXISTS  " + PLAYERS_TN + ";" ,
+            "DROP TABLE IF EXISTS  " + SPORTS_TN + ";" ,
+            "DROP TABLE IF EXISTS  " + TEAMS_TN + ";" ,
+            "DROP TABLE IF EXISTS  " + TRANSACTIONS_TN + ";" };
 
     public DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -170,12 +188,23 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(SQL_CREATE_ENROLLMENTS_TABLE);
+        db.execSQL(SQL_CREATE_LEAGUES_TABLE);
+        db.execSQL(SQL_CREATE_PARENTS_TABLE);
+        db.execSQL(SQL_CREATE_PLAYERS_TABLE);
+        db.execSQL(SQL_CREATE_SPORTS_TABLE);
+        db.execSQL(SQL_CREATE_TEAMS_TABLE);
+        db.execSQL(SQL_CREATE_TRANSACTIONS_TABLE);
+        db.execSQL(SQL_CREATE_USER_LOGINS_TABLE);
+        db.execSQL(SQL_CREATE_USERS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
+        for (String s:SQL_DELETE_ENTRIES
+             ) {
+            db.execSQL(s);
+        }
         onCreate(db);
     }
 

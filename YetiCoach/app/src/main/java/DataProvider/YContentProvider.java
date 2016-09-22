@@ -43,7 +43,7 @@ public class YContentProvider extends ContentProvider {
         }
 
         Cursor cursor = null;
-        
+
         return null;
     }
 
