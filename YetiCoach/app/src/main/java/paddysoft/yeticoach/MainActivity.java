@@ -1,48 +1,51 @@
 package paddysoft.yeticoach;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.res.Resources;
+import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements SignUp.onSignUpConfirmedListener {
+import org.w3c.dom.Text;
 
-    public Button btnSignUpMain;
-    private SignUp dialogSignUp;
+public class MainActivity extends AppCompatActivity
+        implements android.app.LoaderManager.LoaderCallbacks<Cursor> {
+
+    TextView txtVwTestBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnSignUpMain = (Button)findViewById(R.id.btnSignUp);
+        Intent incomingIntent = getIntent();
+        Bundle bundle = incomingIntent.getBundleExtra("LoginDelivery");
+
+        txtVwTestBundle = (TextView)findViewById(R.id.MainActivityBundleTest);
+        txtVwTestBundle.setText(bundle.getString("Email"));
+
+        getLoaderManager().initLoader(0, null, this);
+    }
 
 
-        btnSignUpMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogSignUp = new SignUp();
-                FragmentManager fragmentManager = getFragmentManager();
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-                dialogSignUp.show(fragmentManager, "ShowingSignUpTag");
-            }
-        });
 
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
 
     }
 
     @Override
-    public void signedUpPressed(String first, String last, String phone, String email, String password) {
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
 
-        Log.v("Test", "Attempted to close SignUp Fragment");
-
-        dialogSignUp.dismiss();
     }
 }
