@@ -1,8 +1,11 @@
 package DataProvider;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +14,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import java.util.ArrayList;
 
 import static DataProvider.YetiCoachContract.*;
 
@@ -21,6 +26,7 @@ import static DataProvider.YetiCoachContract.*;
 public class YContentProvider extends ContentProvider {
 
     SQLiteOpenHelper dbHelper = null;
+    private final ThreadLocal<Boolean> mIsInBatchMode = new ThreadLocal<Boolean>();
 
     @Override
     public boolean onCreate() {
@@ -145,11 +151,39 @@ public class YContentProvider extends ContentProvider {
     private Uri getUriForId(long id, Uri uri){
         if(id > 0){
             Uri itemUri = ContentUris.withAppendedId(uri, id);
-            if(true){
+            if(!mIsInBatchMode()){
                 getContext().getContentResolver().notifyChange(itemUri, null);
             }
             return itemUri;
         }
         throw new SQLException ("Problem while inserting into uri: " + uri);
     }
+
+    private boolean mIsInBatchMode() {
+        return mIsInBatchMode.get() != null && mIsInBatchMode.get();
+    }
+
+    @Override
+    public ContentProviderResult[] applyBatch(
+            ArrayList<ContentProviderOperation> operations)
+            throws OperationApplicationException {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        mIsInBatchMode.set(true);
+        // the next line works because SQLiteDatabase
+        // uses a thread local SQLiteSession object for
+        // all manipulations
+        db.beginTransaction();
+        try {
+            final ContentProviderResult[] retResult = super.applyBatch(operations);
+            db.setTransactionSuccessful();
+            getContext().getContentResolver().notifyChange(YetiCoachContract.CONTENT_URI, null);
+            return retResult;
+        }
+        finally {
+            mIsInBatchMode.remove();
+            db.endTransaction();
+        }
+    }
+
+
 }
