@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "little_yeti.db";
 
     // UserLogins Table Definition
@@ -114,7 +114,6 @@ public class DBHelper extends SQLiteOpenHelper {
             ENROLLMENTS_COL_PARENT_ID + " TEXT, " +
             ENROLLMENTS_COL_TEAM_ID + " TEXT);" ;
 
-
     private static final String SQL_CREATE_LEAGUES_TABLE = "" +
 
             "CREATE TABLE " + LEAGUES_TN + "(" +
@@ -197,12 +196,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_TRANSACTIONS_TABLE);
         db.execSQL(SQL_CREATE_USER_LOGINS_TABLE);
         db.execSQL(SQL_CREATE_USERS_TABLE);
+        db.execSQL("INSERT INTO users VALUES(1, 'QWERTYUIOP', 'PATRICK', 'CURRIN', 'CURRIN.PATRICK@YAHOO.COM', '9198127701', '316 MAIN STREET', 'OXFORD', 'NC', '27565')");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        for (String s:SQL_DELETE_ENTRIES
-             ) {
+        for (String s:SQL_DELETE_ENTRIES) {
             db.execSQL(s);
         }
         onCreate(db);
