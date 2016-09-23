@@ -22,7 +22,6 @@ public class Player {
         setDateOfBirth(dob);
     }
 
-
     public int get_id() {
         return _id;
     }
