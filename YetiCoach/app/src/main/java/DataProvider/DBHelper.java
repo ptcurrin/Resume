@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "little_yeti.db";
 
     // UserLogins Table Definition
@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // Users Table Definition
     public final static String USERS_TN = "users";
     public final static String USERS_COL_ID = "_id";
-    public final static String USERS_COL_USER_ID = "userId";
+    public final static String USERS_COL_USER_ID = "userid";
     public final static String USERS_COL_FIRSTNAME = "firstname";
     public final static String USERS_COL_LASTNAME = "lastname";
     public final static String USERS_COL_EMAIL = "email";
@@ -31,56 +31,56 @@ public class DBHelper extends SQLiteOpenHelper {
     // Enrollments Table Definition
     public final static String ENROLLMENTS_TN = "enrollments";
     public final static String ENROLLMENTS_COL_ID = "_id";
-    public final static String ENROLLMENTS_COL_TRANS_ID = "transId";
-    public final static String ENROLLMENTS_COL_PARENT_ID = "parentId";
-    public final static String ENROLLMENTS_COL_TEAM_ID = "teamId";
+    public final static String ENROLLMENTS_COL_TRANS_ID = "transid";
+    public final static String ENROLLMENTS_COL_PARENT_ID = "parentid";
+    public final static String ENROLLMENTS_COL_TEAM_ID = "teamid";
 
     // Leagues Table Definition
     public final static String LEAGUES_TN = "leagues";
     public final static String LEAGUES_COL_ID = "_id";
-    public final static String LEAGUES_COL_LEAGUE_ID = "leagueId";
+    public final static String LEAGUES_COL_LEAGUE_ID = "leagueid";
     public final static String LEAGUES_COL_NAME = "name";
-    public final static String LEAGUES_COL_USER_ID = "userId";
-    public final static String LEAGUES_COL_SPORT_ID = "sportId";
-    public final static String LEAGUES_COL_MIN_AGE = "minimumAge";
-    public final static String LEAGUES_COL_MAX_AGE = "maximumAge";
-    public final static String LEAGUES_COL_START_DATE = "startDate";
-    public final static String LEAGUES_COL_END_DATE = "endDate";
+    public final static String LEAGUES_COL_USER_ID = "userid";
+    public final static String LEAGUES_COL_SPORT_ID = "sportid";
+    public final static String LEAGUES_COL_MIN_AGE = "minimumage";
+    public final static String LEAGUES_COL_MAX_AGE = "maximumage";
+    public final static String LEAGUES_COL_START_DATE = "startdate";
+    public final static String LEAGUES_COL_END_DATE = "enddate";
 
     // Parents Table Definition
     public final static String PARENTS_TN = "parents";
     public final static String PARENTS_COL_ID = "_id";
-    public final static String PARENTS_COL_PARENT_ID = "parentId";
-    public final static String PARENTS_COL_PLAYER_ID = "playerId";
-    public final static String PARENTS_COL_USER_ID = "userId";
+    public final static String PARENTS_COL_PARENT_ID = "parentid";
+    public final static String PARENTS_COL_PLAYER_ID = "playerid";
+    public final static String PARENTS_COL_USER_ID = "userid";
 
     // Players Table Definition
     public final static String PLAYERS_TN = "players";
     public final static String PLAYERS_COL_ID = "_id";
-    public final static String PLAYERS_COL_PLAYER_ID = "playerId";
-    public final static String PLAYERS_COL_FIRST_NAME = "firstName";
-    public final static String PLAYERS_COL_LAST_NAME = "lastName";
-    public final static String PLAYERS_COL_DATE_OF_BIRTH = "dateOfBirth";
+    public final static String PLAYERS_COL_PLAYER_ID = "playerid";
+    public final static String PLAYERS_COL_FIRST_NAME = "firstname";
+    public final static String PLAYERS_COL_LAST_NAME = "lastname";
+    public final static String PLAYERS_COL_DATE_OF_BIRTH = "dateofbirth";
 
     // Sports Table Definition
     public final static String SPORTS_TN = "sports";
     public final static String SPORTS_COL_ID = "_id";
-    public final static String SPORTS_COL_SPORT_ID = "sportId";
+    public final static String SPORTS_COL_SPORT_ID = "sportid";
     public final static String SPORTS_COL_NAME = "name";
     public final static String SPORTS_COL_DESCRIPTION = "description";
-    public final static String SPORTS_COL_IMG_PTH = "imgPth";
+    public final static String SPORTS_COL_IMG_PTH = "imgpth";
 
     // Teams Table Definition
     public final static String TEAMS_TN = "teams";
     public final static String TEAMS_COL_ID = "_id";
-    public final static String TEAMS_COL_TEAM_ID = "teamId";
+    public final static String TEAMS_COL_TEAM_ID = "teamid";
     public final static String TEAMS_COL_NAME = "name";
-    public final static String TEAMS_COL_USER_ID = "userId";
-    public final static String TEAMS_COL_LEAGUE_ID = "leagueId";
+    public final static String TEAMS_COL_USER_ID = "userid";
+    public final static String TEAMS_COL_LEAGUE_ID = "leagueid";
 
     public final static String TRANSACTIONS_TN = "transactions";
     public final static String TRANSACTIONS_COL_ID = "_id";
-    public final static String TRANSACTIONS_COL_TRANS_ID = "transId";
+    public final static String TRANSACTIONS_COL_TRANS_ID = "transid";
     public final static String TRANSACTIONS_COL_PURPOSE = "purpose";
     public final static String TRANSACTIONS_COL_AMOUNT = "amount";
 
@@ -200,6 +200,21 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO users VALUES(2, 'QWERTYUIOA', 'JOHNNY', 'ADAMS', 'JOHNNY.ADAMS@GMAIL.COM', '9198127702', '310 MAIN STREET', 'OXFORD', 'NC', '27516')");
         db.execSQL("INSERT INTO userLogins VALUES(1, 'Johnny.Adams@gmail.com', 'Adams')");
         db.execSQL("INSERT INTO userLogins VALUES(2, 'JOHNNY.ADAMS@GMAIL.COM', 'Adams')");
+        db.execSQL("INSERT INTO leagues VALUES(1, 'FAKELEAGUEID1', 'DURHAM PEEWEE BASKETBALL', 'QWERTYUIOA', 'FAKEBASKETBALL', 9, 12, 100000000, 150000000);");
+        db.execSQL("INSERT INTO leagues VALUES(2, 'FAKELEAGUEID2', 'DURHAM PEEWEE SOCCER', 'QWERTYUIOA', 'FAKESOCCER', 9, 12, 100000000, 160000000);");
+        db.execSQL("INSERT INTO players VALUES(1, 'FAKEPLAYERID1', 'LIL', 'WAYNE', 531792000);");
+        db.execSQL("INSERT INTO players VALUES(2, 'FAKEPLAYERID2', 'BIG', 'WAYNE', 560390400);");
+        db.execSQL("INSERT INTO players VALUES(3, 'FAKEPLAYERID3', 'BIGGER', 'WAYNE', 613094400);");
+        db.execSQL("INSERT INTO parents VALUES(1, 'FAKEPARENTID1', 'FAKEPLAYERID1', 'QWERTYUIOA');");
+        db.execSQL("INSERT INTO parents VALUES(2, 'FAKEPARENTID2', 'FAKEPLAYERID2', 'QWERTYUIOA');");
+        db.execSQL("INSERT INTO parents VALUES(3, 'FAKEPARENTID3', 'FAKEPLAYERID3', 'QWERTYUIOA');");
+        db.execSQL("INSERT INTO sports VALUES(1, 'FAKESPORTID1', 'BASKETBALL', 'BIG DUDES SHOOT HOOPS!', 'xxx');");
+        db.execSQL("INSERT INTO sports VALUES(2, 'FAKESPORTID2', 'SOCCER', 'QUICK DUDES KICK THE BALL!', 'xxx');");
+        db.execSQL("INSERT INTO teams VALUES(1, 'FAKETEAMID1', 'HORNERS', 'QWERTYUIOP', 'FAKELEAGUEID1');");
+        db.execSQL("INSERT INTO teams VALUES(2, 'FAKETEAMID2', 'GROWLERS', 'QWERTYUIOA', 'FAKELEAGUEID1');");
+        db.execSQL("INSERT INTO teams VALUES(3, 'FAKETEAMID3', 'SHAKERS', 'QWERTYUIOP', 'FAKELEAGUEID2');");
+
+
     }
 
     @Override

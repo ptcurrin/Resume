@@ -25,6 +25,8 @@ public final class YetiCoachContract {
     public static final int USER_LOGINS_ID = 2;
     public static final int USER_LIST = 3;
     public static final int USER_ID = 4;
+    public static final int LEAGUE_LIST = 5;
+    public static final int LEAGUE_ID = 6;
 
     static{
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -32,6 +34,8 @@ public final class YetiCoachContract {
         URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, "userlogins/#", USER_LOGINS_ID);
         URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, "users", USER_LIST);
         URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, "users/#", USER_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, "leagues", LEAGUE_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, "leagues/#", LEAGUE_ID);
     }
 
     public static final class UserLogins implements CommonColumns{
@@ -64,10 +68,31 @@ public final class YetiCoachContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.paddysoft.yeticoach_users";
 
         public static final String[] PROJECTION_ALL =
-                { _ID, "userId", "firstName", "lastName", "email",
+                { _ID, "userid", "firstname", "lastname", "email",
                 "phone", "street", "city", "state", "zip" };
 
         public static final String SORT_ORDER_DEFAULT =
-                "lastName ASC";
+                "lastname ASC";
+    }
+
+    public static final class Leagues implements CommonColumns {
+
+        public static final Uri CONTENT_URI =
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, "leagues");
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.paddysoft.yeticoach_leagues";
+
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.paddysoft.yeticoach_leagues";
+
+        public static final String[] PROJECTION_ALL =
+                { _ID, "leagueid", "name", "userid", "sportid", "minimumage", "maximumage",
+                        "startdate", "enddate" };
+
+        public static final String SORT_ORDER_DEFAULT =
+                "sportid ASC";
+
+
     }
 }

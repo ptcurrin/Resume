@@ -5,16 +5,55 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:stretchColumns="*"
     android:shrinkColumns="*"
+    android:stretchColumns="*"
     tools:context="paddysoft.yeticoach.MainActivity">
 
-    <TableRow
-        android:layout_height="wrap_content">
 
-        <include layout="@layout/address_block"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content" />
+    <TableRow android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_column="0"
+            android:layout_span="2">
+
+            <include layout="@layout/welcome_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_column="2"
+            android:layout_span="2">
+
+            <include
+                layout="@layout/address_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Please Choose a League"
+            android:layout_span="4"
+            android:layout_column="0"
+            android:layout_height="50dp"
+            android:gravity="center"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+
+        <Spinner
+            android:id="@+id/spinnerLeagues"
+
+            android:layout_span="4"
+            android:layout_column="0">
+
+        </Spinner>
 
     </TableRow>
 

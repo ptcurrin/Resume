@@ -15,6 +15,9 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.w3c.dom.Text;
+
+import java.net.URI;
 import java.util.ArrayList;
 
 import static dataprovider.YetiCoachContract.URI_MATCHER;
@@ -22,8 +25,11 @@ import static dataprovider.YetiCoachContract.USER_ID;
 import static dataprovider.YetiCoachContract.USER_LIST;
 import static dataprovider.YetiCoachContract.USER_LOGINS_ID;
 import static dataprovider.YetiCoachContract.USER_LOGINS_LIST;
+import static dataprovider.YetiCoachContract.LEAGUE_LIST;
+import static dataprovider.YetiCoachContract.LEAGUE_ID;
 
 public class YetiContentProvider extends ContentProvider {
+
     public YetiContentProvider() {
     }
 
@@ -71,6 +77,16 @@ public class YetiContentProvider extends ContentProvider {
                 builder.appendWhere(YetiCoachContract.Users._ID + " = " +
                         uri.getLastPathSegment());
                 break;
+            case LEAGUE_LIST:
+                builder.setTables(DBSchema.TBL_LEAGUES);
+                if(TextUtils.isEmpty(sortOrder))
+                    sortOrder = YetiCoachContract.Leagues.SORT_ORDER_DEFAULT;
+                break;
+            case LEAGUE_ID:
+                builder.setTables(DBSchema.TBL_LEAGUES);
+                builder.appendWhere(YetiCoachContract.Leagues._ID + " = " +
+                        uri.getLastPathSegment());
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported Uri: " + uri);
         }
@@ -108,6 +124,10 @@ public class YetiContentProvider extends ContentProvider {
                 return  YetiCoachContract.Users.CONTENT_TYPE;
             case USER_ID:
                 return  YetiCoachContract.Users.CONTENT_ITEM_TYPE;
+            case LEAGUE_LIST:
+                return  YetiCoachContract.Leagues.CONTENT_TYPE;
+            case LEAGUE_ID:
+                return  YetiCoachContract.Leagues.CONTENT_ITEM_TYPE;
             default:
                 return null;
         }
@@ -117,22 +137,37 @@ public class YetiContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        if(URI_MATCHER.match(uri) != USER_LOGINS_LIST &&
+        if (URI_MATCHER.match(uri) != USER_LOGINS_LIST &&
                 URI_MATCHER.match(uri) != USER_LOGINS_ID &&
                 URI_MATCHER.match(uri) != USER_LIST &&
-                URI_MATCHER.match(uri) != USER_ID){
+                URI_MATCHER.match(uri) != USER_ID &&
+                URI_MATCHER.match(uri) != LEAGUE_LIST &&
+                URI_MATCHER.match(uri) != LEAGUE_ID) {
             throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
         }
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        if(URI_MATCHER.match(uri) == USER_LOGINS_LIST){
+        if (URI_MATCHER.match(uri) == USER_LOGINS_LIST) {
             long id = db.insert(
                     DBSchema.TBL_USER_LOGINS,
                     null,
                     values
             );
             return getUriForId(id, uri);
+        } else if (URI_MATCHER.match(uri) == USER_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_USERS,
+                    null,
+                    values
+            );
+        } else if (URI_MATCHER.match(uri) == LEAGUE_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_LEAGUES,
+                    null,
+                    values
+            );
         }
+        // TODO: Investigate insertWithOnConflict
         else {
             long id = db.insertWithOnConflict(
                     DBSchema.TBL_USER_LOGINS,
@@ -141,8 +176,12 @@ public class YetiContentProvider extends ContentProvider {
                     SQLiteDatabase.CONFLICT_REPLACE);
             return getUriForId(id, uri);
         }
+        // TODO: insert matchers for the rest of my objects. Shoot me
+        return null;
     }
 
+
+    // TODO: make delete and update actions for each object
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;

@@ -465,7 +465,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 cursor.moveToFirst();
                 userToPass = new User(
                         cursor.getInt(cursor.getColumnIndex("_id")),
-                        cursor.getString(cursor.getColumnIndex("userId")),
+                        cursor.getString(cursor.getColumnIndex("userid")),
                         cursor.getString(cursor.getColumnIndex("firstname")),
                         cursor.getString(cursor.getColumnIndex("lastname")),
                         cursor.getString(cursor.getColumnIndex("email")),
