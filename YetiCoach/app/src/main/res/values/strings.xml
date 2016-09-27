@@ -19,4 +19,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="yeticoach_authority">com.paddysoft.yeticoach</string>
+    <string name="yeti_coach_sign_in">Yeti Coach Sign In</string>
+    <string name="space">" "</string>
+    <string name="address_comma">", "</string>
+    <string name="welcome_comma">"Welcome, "</string>
+    <string name="testing">testing</string>
 </resources>

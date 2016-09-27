@@ -16,14 +16,20 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
+            android:label="@string/yeti_coach_sign_in">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+
+        <provider
+            android:name="dataprovider.YetiContentProvider"
+            android:authorities="com.paddysoft.yeticoach"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
