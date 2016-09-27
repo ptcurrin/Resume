@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "little_yeti.db";
 
     // UserLogins Table Definition
@@ -31,6 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // Enrollments Table Definition
     public final static String ENROLLMENTS_TN = "enrollments";
     public final static String ENROLLMENTS_COL_ID = "_id";
+    public final static String ENROLLMENTS_COL_ENROLLMENT_ID = "enrollmentid";
     public final static String ENROLLMENTS_COL_TRANS_ID = "transid";
     public final static String ENROLLMENTS_COL_PARENT_ID = "parentid";
     public final static String ENROLLMENTS_COL_TEAM_ID = "teamid";

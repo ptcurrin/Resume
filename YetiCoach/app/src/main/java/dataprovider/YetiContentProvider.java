@@ -20,13 +20,7 @@ import org.w3c.dom.Text;
 import java.net.URI;
 import java.util.ArrayList;
 
-import static dataprovider.YetiCoachContract.URI_MATCHER;
-import static dataprovider.YetiCoachContract.USER_ID;
-import static dataprovider.YetiCoachContract.USER_LIST;
-import static dataprovider.YetiCoachContract.USER_LOGINS_ID;
-import static dataprovider.YetiCoachContract.USER_LOGINS_LIST;
-import static dataprovider.YetiCoachContract.LEAGUE_LIST;
-import static dataprovider.YetiCoachContract.LEAGUE_ID;
+import static dataprovider.YetiCoachContract.*;
 
 public class YetiContentProvider extends ContentProvider {
 
@@ -87,6 +81,24 @@ public class YetiContentProvider extends ContentProvider {
                 builder.appendWhere(YetiCoachContract.Leagues._ID + " = " +
                         uri.getLastPathSegment());
                 break;
+            case PLAYER_LIST:
+                builder.setTables(DBSchema.TBL_PLAYERS);
+                if(TextUtils.isEmpty(sortOrder))
+                    sortOrder= YetiCoachContract.Players.SORT_ORDER_DEFAULT;
+                break;
+            case PLAYER_ID:
+                builder.setTables(DBSchema.TBL_PLAYERS);
+                builder.appendWhere(YetiCoachContract.Players._ID + " = " +
+                        uri.getLastPathSegment());
+            case PARENT_LIST:
+                builder.setTables(DBSchema.TBL_PLAYERS);
+                if(TextUtils.isEmpty(sortOrder))
+                    sortOrder= YetiCoachContract.Players.SORT_ORDER_DEFAULT;
+                break;
+            case PARENT_ID:
+                builder.setTables(DBSchema.TBL_PLAYERS);
+                builder.appendWhere(YetiCoachContract.Players._ID + " = " +
+                        uri.getLastPathSegment());
             default:
                 throw new IllegalArgumentException("Unsupported Uri: " + uri);
         }
@@ -119,15 +131,23 @@ public class YetiContentProvider extends ContentProvider {
             case USER_LOGINS_LIST:
                 return YetiCoachContract.UserLogins.CONTENT_TYPE;
             case USER_LOGINS_ID:
-                return YetiCoachContract.UserLogins.CONTENT_ITEM_TYPE;
+                return UserLogins.CONTENT_ITEM_TYPE;
             case USER_LIST:
-                return  YetiCoachContract.Users.CONTENT_TYPE;
+                return  Users.CONTENT_TYPE;
             case USER_ID:
-                return  YetiCoachContract.Users.CONTENT_ITEM_TYPE;
+                return  Users.CONTENT_ITEM_TYPE;
             case LEAGUE_LIST:
-                return  YetiCoachContract.Leagues.CONTENT_TYPE;
+                return  Leagues.CONTENT_TYPE;
             case LEAGUE_ID:
-                return  YetiCoachContract.Leagues.CONTENT_ITEM_TYPE;
+                return  Leagues.CONTENT_ITEM_TYPE;
+            case PLAYER_LIST:
+                return Players.CONTENT_TYPE;
+            case PLAYER_ID:
+                return Players.CONTENT_ITEM_TYPE;
+            case PARENT_LIST:
+                return Parents.CONTENT_TYPE;
+            case PARENT_ID:
+                return Parents.CONTENT_ITEM_TYPE;
             default:
                 return null;
         }
@@ -142,7 +162,11 @@ public class YetiContentProvider extends ContentProvider {
                 URI_MATCHER.match(uri) != USER_LIST &&
                 URI_MATCHER.match(uri) != USER_ID &&
                 URI_MATCHER.match(uri) != LEAGUE_LIST &&
-                URI_MATCHER.match(uri) != LEAGUE_ID) {
+                URI_MATCHER.match(uri) != LEAGUE_ID &&
+                URI_MATCHER.match(uri) != PLAYER_LIST &&
+                URI_MATCHER.match(uri) != PLAYER_ID &&
+                URI_MATCHER.match(uri) != PARENT_LIST &&
+                URI_MATCHER.match(uri) != PARENT_LIST) {
             throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
         }
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -163,6 +187,18 @@ public class YetiContentProvider extends ContentProvider {
         } else if (URI_MATCHER.match(uri) == LEAGUE_LIST) {
             long id = db.insert(
                     DBSchema.TBL_LEAGUES,
+                    null,
+                    values
+            );
+        } else if (URI_MATCHER.match(uri) == PLAYER_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_PLAYERS,
+                    null,
+                    values
+            );
+        } else if (URI_MATCHER.match(uri) == PARENT_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_PARENTS,
                     null,
                     values
             );
