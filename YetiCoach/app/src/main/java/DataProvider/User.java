@@ -1,10 +1,12 @@
-package DataProvider;
+package dataprovider;
+
+import java.io.Serializable;
 
 /**
  * Created by Patrick on 9/23/2016.
  */
 
-public class User {
+public class User implements Serializable {
 
     private int _id;
     private String userId;

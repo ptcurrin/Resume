@@ -1,78 +1,105 @@
 package paddysoft.yeticoach;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
+import android.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import DataProvider.DBHelper;
-import DataProvider.YContentProvider;
+import dataprovider.User;
+import dataprovider.YLoader;
 
 public class MainActivity extends AppCompatActivity
-        implements android.app.LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     TextView txtVwTestBundle;
+    private TextView tvUserId;
+    private TextView tvFirstName;
+    private TextView tvLastName;
+    private TextView tvEmail;
+    private TextView tvPhone;
+    private TextView tvStreet;
+    private TextView tvCity;
+    private TextView tvState;
+    private TextView tvZip;
+
+    private String cUserId;
+    private String cFirst;
+    private String cLast;
+    private String cEmail;
+    private String cPhone;
+    private String cStreet;
+    private String cCity;
+    private String cState;
+    private String cZip;
+
+    private User currentUser = null;
+    private static final int USER_LOADER_ID = 1;
+    private LoaderManager.LoaderCallbacks<Cursor> yCallbacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        yCallbacks = this;
+
+        //tvUserId = (TextView)findViewById(R.id.userId);
+        tvFirstName = (TextView)findViewById(R.id.userFirstName);
+        tvLastName = (TextView)findViewById(R.id.userLastName);
+        //tvEmail = (TextView)findViewById(R.id.userEmail);
+        //tvPhone = (TextView)findViewById(R.id.userPhone);
+        tvStreet = (TextView)findViewById(R.id.userStreet);
+        tvCity = (TextView)findViewById(R.id.userCity);
+        tvState = (TextView)findViewById(R.id.userState);
+        tvZip = (TextView)findViewById(R.id.userZip);
+
         Intent incomingIntent = getIntent();
         Bundle bundle = incomingIntent.getBundleExtra("LoginDelivery");
+        cEmail = bundle.getString("Email");
 
-        txtVwTestBundle = (TextView)findViewById(R.id.MainActivityBundleTest);
-        txtVwTestBundle.setText(bundle.getString("Email"));
-
-        //getLoaderManager().initLoader(0, null, this);
-        DBHelper dbHelper = new DBHelper(getApplicationContext());
-
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put(DBHelper.SPORTS_COL_SPORT_ID, "sport1");
-//        values.put(DBHelper.SPORTS_COL_NAME, "Hockey");
-//        values.put(DBHelper.SPORTS_COL_DESCRIPTION, "Violent");
-//        values.put(DBHelper.SPORTS_COL_IMG_PTH, "Hell");
-//        if(db.isOpen()) {
-//            db.insert(DBHelper.SPORTS_TN, null, values);
-//        }
-//
-//        Cursor cursor = db.rawQuery("SELECT * FROM " + DBHelper.SPORTS_TN, null);
-//
-//        int count = 0;
-//
-//        if(cursor != null){
-//            cursor.moveToNext();
-//            count = cursor.getCount();
-//        }
-//
-//        txtVwTestBundle.setText("" + count);
+        android.app.LoaderManager lm = getLoaderManager();
     }
 
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-
+        YLoader userLoader = new YLoader(getApplicationContext(), cEmail);
 
         return null;
     }
 
     @Override
-    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        switch(loader.getId()){
+            case USER_LOADER_ID:
+                tvFirstName.setText(cursor.getString(cursor.getColumnIndex("firstName")));
+                tvLastName.setText(cursor.getString(cursor.getColumnIndex("lastName")));
+                tvStreet.setText(cursor.getString(cursor.getColumnIndex("street")));
+                tvCity.setText(cursor.getString(cursor.getColumnIndex("city")));
+                tvState.setText(cursor.getString(cursor.getColumnIndex("state")));
+                tvZip.setText(cursor.getString(cursor.getColumnIndex("zip")));
 
+                break;
+        }
     }
 
+
     @Override
-    public void onLoaderReset(android.content.Loader<Cursor> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+        switch(loader.getId()){
+            case USER_LOADER_ID:
+                tvFirstName.setText("");
+                tvLastName.setText("");
+                tvStreet.setText("");
+                tvCity.setText("");
+                tvState.setText("");
+                tvZip.setText("");
+        }
 
     }
 }

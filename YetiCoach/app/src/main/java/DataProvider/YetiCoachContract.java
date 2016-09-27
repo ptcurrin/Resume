@@ -1,12 +1,9 @@
-package DataProvider;
+package dataprovider;
 
 import android.content.ContentResolver;
 import android.content.UriMatcher;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.provider.ContactsContract;
-
-import static android.provider.ContactsContract.Intents.Insert.EMAIL;
 
 
 public final class YetiCoachContract {
@@ -23,11 +20,11 @@ public final class YetiCoachContract {
     public static final Uri CONTENT_URI =
             Uri.parse("content://" + AUTHORITY);
 
-    protected static final UriMatcher URI_MATCHER;
-    protected static final int USER_LOGINS_LIST = 1;
-    protected static final int USER_LOGINS_ID = 2;
-    protected static final int USER_LIST = 3;
-    protected static final int USER_ID = 4;
+    public static final UriMatcher URI_MATCHER;
+    public static final int USER_LOGINS_LIST = 1;
+    public static final int USER_LOGINS_ID = 2;
+    public static final int USER_LIST = 3;
+    public static final int USER_ID = 4;
 
     static{
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -49,7 +46,7 @@ public final class YetiCoachContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.paddysoft.yeticoach_userlogins";
 
         public static final String[] PROJECTION_ALL =
-                {"_id", "email", "password"};
+                {_ID, "email", "password"};
 
         public static final String SORT_ORDER_DEFAULT =
                 "email ASC";
@@ -67,10 +64,10 @@ public final class YetiCoachContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.paddysoft.yeticoach_users";
 
         public static final String[] PROJECTION_ALL =
-                { "_id", "userId", "firstName", "lastName", "email",
+                { _ID, "userId", "firstName", "lastName", "email",
                 "phone", "street", "city", "state", "zip" };
 
         public static final String SORT_ORDER_DEFAULT =
-                "email ASC";
+                "lastName ASC";
     }
 }

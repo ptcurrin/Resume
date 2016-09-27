@@ -3,6 +3,7 @@ package paddysoft.yeticoach;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -50,7 +51,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import dataprovider.User;
+import dataprovider.YetiCoachContract;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -76,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private User userToPass;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -185,7 +192,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email =  "Wanda.Adams@gmail.com";  // mEmailView.getText().toString();
+        String email =  "Johnny.Adams@gmail.com";  // mEmailView.getText().toString();
         String password = "Adams";    // mPasswordView.getText().toString();
 
 //        String email = "heya@childcare.net";
@@ -229,7 +236,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         //TODO: Replace this with your own logic
 
-        return email.contains("@");
+        return (email.contains("@") && email.contains("."));
     }
 
     private boolean isPasswordValid(String password) {
@@ -347,104 +354,152 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
-            String http = "http://yeticloud20160907064126.azurewebsites.net/api/UserLogins";
-            // Returned JSON object should allow getting 'Email' and 'Password' from server
+            // Look for a local login instance matching the user input
+            Cursor cursor = getContentResolver().query(YetiCoachContract.UserLogins.CONTENT_URI,
+                    YetiCoachContract.UserLogins.PROJECTION_ALL,
+                    " email=? AND password=? ",
+                    new String[]{ mEmail, mPassword },
+                    null);
 
+            // If there is a record, pass its email forward
+            if(cursor != null && cursor.getCount() == 1) {
 
-            try {
-                // Simulate network access.
+                cursor.moveToFirst();
+                int indexEmail = cursor.getColumnIndex("email");
+                rEmail = cursor.getString(indexEmail);
 
-                StringBuilder stringBuilder = new StringBuilder();
+            } else {
+
+                // If no local record is found, retrieve or create the needed record at the site
+                String http = "http://yeticloud20160907064126.azurewebsites.net/api/UserLogins";
+                // Returned JSON object should allow getting 'Email' and 'Password' from server
 
                 try {
-                    URL url = new URL(http);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setDoOutput(true);
-                    urlConnection.setRequestMethod("POST");
-                    urlConnection.setConnectTimeout(10000);
-                    urlConnection.setReadTimeout(10000);
-                    urlConnection.setRequestProperty("Content-Type", "application/json");
-                    urlConnection.setRequestProperty("Accept", "application/json");
-                    urlConnection.connect();
+                    // network login access through the yeticoach API
 
-                    // Create JSON Object
-                    JSONObject json = new JSONObject();
-                    json.put("Email", mEmail);
-                    json.put("Password", mPassword);
+                    StringBuilder stringBuilder = new StringBuilder();
 
-                    OutputStream outputStream = urlConnection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(outputStream, "UTF-8")
-                    );
+                    try {
+                        URL url = new URL(http);
+                        urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.setDoOutput(true);
+                        urlConnection.setRequestMethod("POST");
+                        urlConnection.setConnectTimeout(10000);
+                        urlConnection.setReadTimeout(10000);
+                        urlConnection.setRequestProperty("Content-Type", "application/json");
+                        urlConnection.setRequestProperty("Accept", "application/json");
+                        urlConnection.connect();
 
-                    writer.write(json.toString());
-                    writer.close();
-                    outputStream.close();
+                        // Create JSON Object
+                        JSONObject json = new JSONObject();
+                        json.put("Email", mEmail);
+                        json.put("Password", mPassword);
 
-                    int responseCode = urlConnection.getResponseCode();
-                    if(responseCode == HttpURLConnection.HTTP_OK || responseCode == 201){
-                        BufferedReader bufferedReader = new BufferedReader(
-                                new InputStreamReader(urlConnection.getInputStream(),"utf-8"));
-                        String line = null;
-                        while((line = bufferedReader.readLine()) != null){
-                            stringBuilder.append(line + "\n");
+                        OutputStream outputStream = urlConnection.getOutputStream();
+                        BufferedWriter writer = new BufferedWriter(
+                                new OutputStreamWriter(outputStream, "UTF-8")
+                        );
+
+                        writer.write(json.toString());
+                        writer.close();
+                        outputStream.close();
+
+                        int responseCode = urlConnection.getResponseCode();
+                        if (responseCode == HttpURLConnection.HTTP_OK || responseCode == 201) {
+                            BufferedReader bufferedReader = new BufferedReader(
+                                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+                            String line = null;
+                            while ((line = bufferedReader.readLine()) != null) {
+                                stringBuilder.append(line + "\n");
+                            }
+                            bufferedReader.close();
+
+                            JSONObject returnObject = new JSONObject(stringBuilder.toString());
+                            rEmail = returnObject.getString("Email");
+                            rPassword = returnObject.getString("Password");
+
+                            ContentValues values = new ContentValues();
+                            values.put("email", rEmail);
+                            values.put("password", rPassword);
+
+                            Uri uri = getContentResolver().insert(
+                                    YetiCoachContract.Users.CONTENT_URI, values);
+
+                            if(uri == null){
+                                throw new Exception("Failed INSERT into UserLogins... check the database for errors.");
+                            }
                         }
-                        bufferedReader.close();
 
-                        String logString = stringBuilder.toString();
-
-                        JSONObject returnObject = new JSONObject(stringBuilder.toString());
-                        rEmail = returnObject.getString("Email");
-                        rPassword = returnObject.getString("Password");
-
-                        Log.v("Test ............  HTTP", rEmail + "\n" + rPassword);
-
-                    }else{
-                        Log.v("Test ............  HTTP", urlConnection.getResponseMessage());
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        urlConnection.disconnect();
                     }
 
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } finally{
-                    urlConnection.disconnect();
-                }
 
-                if(!mEmail.equalsIgnoreCase(rEmail) ||  !mPassword.equalsIgnoreCase(rPassword)){
-                    Toast toast = Toast.makeText(getApplicationContext(), "There has been an error at the server...\n" +
-                    "Please reenter your password.", Toast.LENGTH_LONG);
+
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
                     return false;
                 }
 
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
             }
-
             // TODO: register the new account here.
+            rEmail = rEmail.toUpperCase();
+
+            cursor = getContentResolver().query(
+                    YetiCoachContract.Users.CONTENT_URI,
+                    YetiCoachContract.Users.PROJECTION_ALL,
+                    " email=? ",
+                    new String[]{rEmail},
+                    null);
+            if(cursor != null && cursor.getCount() == 1) {
+
+                cursor.moveToFirst();
+                userToPass = new User(
+                        cursor.getInt(cursor.getColumnIndex("_id")),
+                        cursor.getString(cursor.getColumnIndex("userId")),
+                        cursor.getString(cursor.getColumnIndex("firstname")),
+                        cursor.getString(cursor.getColumnIndex("lastname")),
+                        cursor.getString(cursor.getColumnIndex("email")),
+                        cursor.getString(cursor.getColumnIndex("phone")),
+                        cursor.getString(cursor.getColumnIndex("street")),
+                        cursor.getString(cursor.getColumnIndex("city")),
+                        cursor.getString(cursor.getColumnIndex("state")),
+                        cursor.getString(cursor.getColumnIndex("zip")));
+
+            }
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
             mAuthTask = null;
             showProgress(false);
 
             if (success) {
+
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("Email", rEmail);
+                bundle.putSerializable("UserDelivery", userToPass);
                 intent.putExtra("LoginDelivery", bundle);
                 startActivity(intent);
+
             } else {
+
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+
             }
         }
 

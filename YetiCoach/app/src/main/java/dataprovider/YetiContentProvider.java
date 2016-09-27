@@ -1,4 +1,4 @@
-package DataProvider;
+package dataprovider;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -17,13 +17,18 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
-import static DataProvider.YetiCoachContract.*;
+import static dataprovider.YetiCoachContract.URI_MATCHER;
+import static dataprovider.YetiCoachContract.USER_ID;
+import static dataprovider.YetiCoachContract.USER_LIST;
+import static dataprovider.YetiCoachContract.USER_LOGINS_ID;
+import static dataprovider.YetiCoachContract.USER_LOGINS_LIST;
 
-/**
- * Created by Patrick on 9/22/2016.
- */
+public class YetiContentProvider extends ContentProvider {
+    public YetiContentProvider() {
+    }
 
-public class YContentProvider extends ContentProvider {
+    public static final String AUTHORITY =
+            "com.paddysoft.yeticoach";
 
     SQLiteOpenHelper dbHelper = null;
     private final ThreadLocal<Boolean> mIsInBatchMode = new ThreadLocal<Boolean>();
@@ -47,24 +52,24 @@ public class YContentProvider extends ContentProvider {
             case USER_LOGINS_LIST:
                 builder.setTables(DBSchema.TBL_USER_LOGINS);
                 if(TextUtils.isEmpty(sortOrder)){
-                    sortOrder = UserLogins.SORT_ORDER_DEFAULT;
+                    sortOrder = YetiCoachContract.UserLogins.SORT_ORDER_DEFAULT;
                 }
                 break;
             case USER_LOGINS_ID:
                 builder.setTables(DBSchema.TBL_USER_LOGINS);
-                builder.appendWhere(UserLogins._ID + " = " +
-                uri.getLastPathSegment());
+                builder.appendWhere(YetiCoachContract.UserLogins._ID + " = " +
+                        uri.getLastPathSegment());
                 break;
             case USER_LIST:
                 builder.setTables(DBSchema.TBL_USERS);
                 if(TextUtils.isEmpty(sortOrder)){
-                    sortOrder = Users.SORT_ORDER_DEFAULT;
+                    sortOrder = YetiCoachContract.Users.SORT_ORDER_DEFAULT;
                 }
                 break;
             case USER_ID:
                 builder.setTables(DBSchema.TBL_USERS);
-                builder.appendWhere(Users._ID + " = " +
-                uri.getLastPathSegment());
+                builder.appendWhere(YetiCoachContract.Users._ID + " = " +
+                        uri.getLastPathSegment());
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported Uri: " + uri);
@@ -96,13 +101,13 @@ public class YContentProvider extends ContentProvider {
 
         switch(URI_MATCHER.match(uri)){
             case USER_LOGINS_LIST:
-                return UserLogins.CONTENT_TYPE;
+                return YetiCoachContract.UserLogins.CONTENT_TYPE;
             case USER_LOGINS_ID:
-                return UserLogins.CONTENT_ITEM_TYPE;
+                return YetiCoachContract.UserLogins.CONTENT_ITEM_TYPE;
             case USER_LIST:
-                return  Users.CONTENT_TYPE;
+                return  YetiCoachContract.Users.CONTENT_TYPE;
             case USER_ID:
-                return  Users.CONTENT_ITEM_TYPE;
+                return  YetiCoachContract.Users.CONTENT_ITEM_TYPE;
             default:
                 return null;
         }
@@ -122,7 +127,7 @@ public class YContentProvider extends ContentProvider {
 
         if(URI_MATCHER.match(uri) == USER_LOGINS_LIST){
             long id = db.insert(
-                DBSchema.TBL_USER_LOGINS,
+                    DBSchema.TBL_USER_LOGINS,
                     null,
                     values
             );
@@ -156,7 +161,7 @@ public class YContentProvider extends ContentProvider {
             }
             return itemUri;
         }
-        throw new SQLException ("Problem while inserting into uri: " + uri);
+        throw new SQLException("Problem while inserting into uri: " + uri);
     }
 
     private boolean mIsInBatchMode() {

@@ -1,4 +1,4 @@
-package DataProvider;
+package dataprovider;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "little_yeti.db";
 
     // UserLogins Table Definition
@@ -197,6 +197,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_USER_LOGINS_TABLE);
         db.execSQL(SQL_CREATE_USERS_TABLE);
         db.execSQL("INSERT INTO users VALUES(1, 'QWERTYUIOP', 'PATRICK', 'CURRIN', 'CURRIN.PATRICK@YAHOO.COM', '9198127701', '316 MAIN STREET', 'OXFORD', 'NC', '27565')");
+        db.execSQL("INSERT INTO users VALUES(2, 'QWERTYUIOA', 'JOHNNY', 'ADAMS', 'JOHNNY.ADAMS@GMAIL.COM', '9198127702', '310 MAIN STREET', 'OXFORD', 'NC', '27516')");
+        db.execSQL("INSERT INTO userLogins VALUES(1, 'Johnny.Adams@gmail.com', 'Adams')");
+        db.execSQL("INSERT INTO userLogins VALUES(2, 'JOHNNY.ADAMS@GMAIL.COM', 'Adams')");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package DataProvider;
+package dataprovider;
 
 import java.util.Date;
 

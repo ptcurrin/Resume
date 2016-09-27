@@ -1,4 +1,4 @@
-package DataProvider;
+package dataprovider;
 
 /**
  * Created by Patrick on 9/23/2016.
