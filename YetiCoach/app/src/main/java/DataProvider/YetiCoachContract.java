@@ -5,6 +5,7 @@ import android.content.UriMatcher;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import static dataprovider.DBHelper.*;
+import static dataprovider.DBSchema.*;
 
 
 public final class YetiCoachContract {
@@ -39,6 +40,8 @@ public final class YetiCoachContract {
     public static final int SPORT_ID = 14;
     public static final int TRANSACTION_LIST = 15;
     public static final int TRANSACTION_ID = 16;
+    public static final int TEAM_LIST = 17;
+    public static final int TEAM_ID = 18;
 
 
     public static final String VENDOR = "/vnd.com.paddysoft.yeticoach";
@@ -47,34 +50,36 @@ public final class YetiCoachContract {
 
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_USER_LOGINS, USER_LOGINS_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_USER_LOGINS + FWS_HASH, USER_LOGINS_ID);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_USERS, USER_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_USERS + FWS_HASH, USER_ID);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_LEAGUES, LEAGUE_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_LEAGUES + FWS_HASH, LEAGUE_ID);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_PLAYERS, PLAYER_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_PLAYERS + FWS_HASH, PLAYER_ID);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_PARENTS, PARENT_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_PARENTS + FWS_HASH, PARENT_ID);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_ENROLLMENTS, ENROLLMENT_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_ENROLLMENTS + FWS_HASH, ENROLLMENT_ID);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_SPORTS, SPORT_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_SPORTS + FWS_HASH, SPORT_ID);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_TRANSACTIONS, TRANSACTION_LIST);
-        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, DBSchema.TBL_TRANSACTIONS + FWS_HASH, TRANSACTION_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_USER_LOGINS, USER_LOGINS_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_USER_LOGINS + FWS_HASH, USER_LOGINS_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_USERS, USER_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_USERS + FWS_HASH, USER_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_LEAGUES, LEAGUE_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_LEAGUES + FWS_HASH, LEAGUE_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_PLAYERS, PLAYER_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_PLAYERS + FWS_HASH, PLAYER_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_PARENTS, PARENT_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_PARENTS + FWS_HASH, PARENT_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_ENROLLMENTS, ENROLLMENT_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_ENROLLMENTS + FWS_HASH, ENROLLMENT_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_SPORTS, SPORT_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_SPORTS + FWS_HASH, SPORT_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_TRANSACTIONS, TRANSACTION_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_TRANSACTIONS + FWS_HASH, TRANSACTION_ID);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_TEAMS + FWS_HASH, TEAM_LIST);
+        URI_MATCHER.addURI(YetiCoachContract.AUTHORITY, TBL_TEAMS + FWS_HASH, TEAM_ID);
     }
 
     public static final class UserLogins implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_USER_LOGINS);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_USER_LOGINS);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_USER_LOGINS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_USER_LOGINS;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_USER_LOGINS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_USER_LOGINS;
 
         public static final String[] PROJECTION_ALL =
                 {_ID, USER_LOGINS_CN_EMAIL, USER_LOGINS_CN_PASSWORD};
@@ -86,13 +91,13 @@ public final class YetiCoachContract {
     public static final class Users implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_USERS);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_USERS);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_USERS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_USERS;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_USERS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_USERS;
 
         public static final String[] PROJECTION_ALL =
                 {
@@ -115,13 +120,13 @@ public final class YetiCoachContract {
     public static final class Leagues implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_LEAGUES);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_LEAGUES);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_LEAGUES;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_LEAGUES;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_LEAGUES;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_LEAGUES;
 
         public static final String[] PROJECTION_ALL =
                 {
@@ -143,13 +148,13 @@ public final class YetiCoachContract {
     public static final class Players implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_PLAYERS);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_PLAYERS);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_PLAYERS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_PLAYERS;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_PLAYERS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_PLAYERS;
 
         public static final String[] PROJECTION_ALL =
                 {
@@ -169,13 +174,13 @@ public final class YetiCoachContract {
     public static final class Parents implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_PARENTS);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_PARENTS);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_PARENTS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_PARENTS;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_PARENTS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_PARENTS;
 
         public static final String[] PROJECTION_ALL =
                 {
@@ -194,13 +199,13 @@ public final class YetiCoachContract {
     public static final class Enrollments implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_ENROLLMENTS);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_ENROLLMENTS);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_ENROLLMENTS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_ENROLLMENTS;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_ENROLLMENTS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_ENROLLMENTS;
 
         public static final String[] PROJECTION_ALL =
                 {
@@ -218,13 +223,13 @@ public final class YetiCoachContract {
     public static final class Sports implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_SPORTS);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_SPORTS);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_SPORTS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_SPORTS;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_SPORTS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_SPORTS;
 
         public static final String[] PROJECTION_ALL =
                 {
@@ -244,13 +249,13 @@ public final class YetiCoachContract {
     public static final class Transactions implements CommonColumns {
 
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, DBSchema.TBL_TRANSACTIONS);
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_TRANSACTIONS);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_TRANSACTIONS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_TRANSACTIONS;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + DBSchema.TBL_TRANSACTIONS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_TRANSACTIONS;
 
         public static final String[] PROJECTION_ALL =
                 {
@@ -262,6 +267,31 @@ public final class YetiCoachContract {
 
         public static final String SORT_ORDER_DEFAULT =
                 TRANSACTIONS_COL_PURPOSE + ASC;
+
+    }
+
+    public static final class Teams implements CommonColumns {
+
+        public static final Uri CONTENT_URI =
+                Uri.withAppendedPath(YetiCoachContract.CONTENT_URI, TBL_TEAMS);
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + VENDOR + "_" + TBL_TEAMS;
+
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + VENDOR + "_" + TBL_TEAMS;
+
+        public static final String[] PROJECTION_ALL =
+                {
+                        _ID,
+                        TEAMS_COL_TEAM_ID,
+                        TEAMS_COL_NAME,
+                        TEAMS_COL_LEAGUE_ID,
+                        TEAMS_COL_USER_ID
+                };
+
+        public static final String SORT_ORDER_DEFAULT =
+                TEAMS_COL_LEAGUE_ID + ASC;
 
     }
 }

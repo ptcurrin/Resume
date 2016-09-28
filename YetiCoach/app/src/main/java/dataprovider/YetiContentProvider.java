@@ -27,9 +27,6 @@ public class YetiContentProvider extends ContentProvider {
     public YetiContentProvider() {
     }
 
-    public static final String AUTHORITY =
-            "com.paddysoft.yeticoach";
-
     SQLiteOpenHelper dbHelper = null;
     private final ThreadLocal<Boolean> mIsInBatchMode = new ThreadLocal<Boolean>();
 
@@ -99,6 +96,42 @@ public class YetiContentProvider extends ContentProvider {
                 builder.setTables(DBSchema.TBL_PLAYERS);
                 builder.appendWhere(YetiCoachContract.Players._ID + " = " +
                         uri.getLastPathSegment());
+            case SPORT_LIST:
+                builder.setTables(DBSchema.TBL_SPORTS);
+                if(TextUtils.isEmpty(sortOrder))
+                    sortOrder= YetiCoachContract.Sports.SORT_ORDER_DEFAULT;
+                break;
+            case SPORT_ID:
+                builder.setTables(DBSchema.TBL_SPORTS);
+                builder.appendWhere(YetiCoachContract.Sports._ID + " = " +
+                        uri.getLastPathSegment());
+            case ENROLLMENT_LIST:
+                builder.setTables(DBSchema.TBL_ENROLLMENTS);
+                if(TextUtils.isEmpty(sortOrder))
+                    sortOrder= YetiCoachContract.Enrollments.SORT_ORDER_DEFAULT;
+                break;
+            case ENROLLMENT_ID:
+                builder.setTables(DBSchema.TBL_ENROLLMENTS);
+                builder.appendWhere(YetiCoachContract.Enrollments._ID + " = " +
+                        uri.getLastPathSegment());
+            case TRANSACTION_LIST:
+                builder.setTables(DBSchema.TBL_TRANSACTIONS);
+                if(TextUtils.isEmpty(sortOrder))
+                    sortOrder= YetiCoachContract.Transactions.SORT_ORDER_DEFAULT;
+                break;
+            case TRANSACTION_ID:
+                builder.setTables(DBSchema.TBL_TRANSACTIONS);
+                builder.appendWhere(YetiCoachContract.Transactions._ID + " = " +
+                        uri.getLastPathSegment());
+            case TEAM_LIST:
+                builder.setTables(DBSchema.TBL_TEAMS);
+                if(TextUtils.isEmpty(sortOrder))
+                    sortOrder= YetiCoachContract.Teams.SORT_ORDER_DEFAULT;
+                break;
+            case TEAM_ID:
+                builder.setTables(DBSchema.TBL_TEAMS);
+                builder.appendWhere(YetiCoachContract.Teams._ID + " = " +
+                        uri.getLastPathSegment());
             default:
                 throw new IllegalArgumentException("Unsupported Uri: " + uri);
         }
@@ -148,6 +181,22 @@ public class YetiContentProvider extends ContentProvider {
                 return Parents.CONTENT_TYPE;
             case PARENT_ID:
                 return Parents.CONTENT_ITEM_TYPE;
+            case SPORT_LIST:
+                return Sports.CONTENT_TYPE;
+            case SPORT_ID:
+                return Sports.CONTENT_ITEM_TYPE;
+            case ENROLLMENT_LIST:
+                return Enrollments.CONTENT_TYPE;
+            case ENROLLMENT_ID:
+                return Enrollments.CONTENT_ITEM_TYPE;
+            case TRANSACTION_LIST:
+                return Transactions.CONTENT_TYPE;
+            case TRANSACTION_ID:
+                return Transactions.CONTENT_ITEM_TYPE;
+            case TEAM_LIST:
+                return Teams.CONTENT_TYPE;
+            case TEAM_ID:
+                return Teams.CONTENT_ITEM_TYPE;
             default:
                 return null;
         }
@@ -157,16 +206,42 @@ public class YetiContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        if (URI_MATCHER.match(uri) != USER_LOGINS_LIST &&
-                URI_MATCHER.match(uri) != USER_LOGINS_ID &&
-                URI_MATCHER.match(uri) != USER_LIST &&
-                URI_MATCHER.match(uri) != USER_ID &&
-                URI_MATCHER.match(uri) != LEAGUE_LIST &&
-                URI_MATCHER.match(uri) != LEAGUE_ID &&
-                URI_MATCHER.match(uri) != PLAYER_LIST &&
-                URI_MATCHER.match(uri) != PLAYER_ID &&
-                URI_MATCHER.match(uri) != PARENT_LIST &&
-                URI_MATCHER.match(uri) != PARENT_LIST) {
+        if (URI_MATCHER.match(uri) != USER_LOGINS_LIST
+                &&
+                URI_MATCHER.match(uri) != USER_LOGINS_ID
+                &&
+                URI_MATCHER.match(uri) != USER_LIST
+                &&
+                URI_MATCHER.match(uri) != USER_ID
+                &&
+                URI_MATCHER.match(uri) != LEAGUE_LIST
+                &&
+                URI_MATCHER.match(uri) != LEAGUE_ID
+                &&
+                URI_MATCHER.match(uri) != PLAYER_LIST
+                &&
+                URI_MATCHER.match(uri) != PLAYER_ID
+                &&
+                URI_MATCHER.match(uri) != PARENT_LIST
+                &&
+                URI_MATCHER.match(uri) != PARENT_LIST
+                &&
+                URI_MATCHER.match(uri) != ENROLLMENT_LIST
+                &&
+                URI_MATCHER.match(uri) != ENROLLMENT_ID
+                &&
+                URI_MATCHER.match(uri) != SPORT_LIST
+                &&
+                URI_MATCHER.match(uri) != SPORT_ID
+                &&
+                URI_MATCHER.match(uri) != TRANSACTION_LIST
+                &&
+                URI_MATCHER.match(uri) != TRANSACTION_ID
+                &&
+                URI_MATCHER.match(uri) != TEAM_LIST
+                &&
+                URI_MATCHER.match(uri) != TEAM_LIST
+                ) {
             throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
         }
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -184,36 +259,68 @@ public class YetiContentProvider extends ContentProvider {
                     null,
                     values
             );
+            return getUriForId(id, uri);
         } else if (URI_MATCHER.match(uri) == LEAGUE_LIST) {
             long id = db.insert(
                     DBSchema.TBL_LEAGUES,
                     null,
                     values
             );
+            return getUriForId(id, uri);
         } else if (URI_MATCHER.match(uri) == PLAYER_LIST) {
             long id = db.insert(
                     DBSchema.TBL_PLAYERS,
                     null,
                     values
             );
+            return getUriForId(id, uri);
         } else if (URI_MATCHER.match(uri) == PARENT_LIST) {
             long id = db.insert(
                     DBSchema.TBL_PARENTS,
                     null,
                     values
             );
+            return getUriForId(id, uri);
+        } else if (URI_MATCHER.match(uri) == ENROLLMENT_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_ENROLLMENTS,
+                    null,
+                    values
+            );
+            return getUriForId(id, uri);
+        } else if (URI_MATCHER.match(uri) == SPORT_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_SPORTS,
+                    null,
+                    values
+            );
+            return getUriForId(id, uri);
+        } else if (URI_MATCHER.match(uri) == TRANSACTION_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_TRANSACTIONS,
+                    null,
+                    values
+            );
+            return getUriForId(id, uri);
+        } else if (URI_MATCHER.match(uri) == TEAM_LIST) {
+            long id = db.insert(
+                    DBSchema.TBL_TEAMS,
+                    null,
+                    values
+            );
+            return getUriForId(id, uri);
         }
         // TODO: Investigate insertWithOnConflict
         else {
-            long id = db.insertWithOnConflict(
-                    DBSchema.TBL_USER_LOGINS,
-                    null,
-                    values,
-                    SQLiteDatabase.CONFLICT_REPLACE);
-            return getUriForId(id, uri);
+//            long id = db.insertWithOnConflict(
+//                    DBSchema.TBL_USER_LOGINS,
+//                    null,
+//                    values,
+//                    SQLiteDatabase.CONFLICT_REPLACE);
+//            return getUriForId(id, uri);
+            return null;
         }
-        // TODO: insert matchers for the rest of my objects. Shoot me
-        return null;
+
     }
 
 

@@ -14,4 +14,5 @@ public class DBSchema {
     public static final String TBL_SPORTS = "sports";
     public static final String TBL_ENROLLMENTS = "enrollments";
     public static final String TBL_TRANSACTIONS = "transactions";
+    public static final String TBL_TEAMS = "teams";
 }
